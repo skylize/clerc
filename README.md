@@ -1,7 +1,7 @@
 # *Clerc*
 
 ----
-##Chrome™ Live Extension Reloading Client
+##for Chrome™ Live Extension Reloading Client
 Provides a basic client with minimal Live Reload compatibility for Chrome™ App Development.
 
 ----
