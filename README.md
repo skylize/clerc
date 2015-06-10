@@ -8,7 +8,7 @@ Provides a basic client with minimal Live Reload compatibility for Chrome™ App
 ##Usage
 * Activate your [Live Reload](http://livereload.com) (or compatible) server to watch for file changes. With the server running, click the Clerc icon in Chrome to start listening for reload commands on `localhost:35729`.
 
-* If a Clerc receives a message including the attributes ``{command: 'reload', path: ''}``, it will reload all enabled unpacked extensions and apps.
+* If Clerc receives a message including the attributes ``{command: 'reload', path: ''}``, it will reload all enabled unpacked extensions and apps.
 
 * If Clerc receives a message including the attributes ``{command: 'reload', path: 'app_identifier'}``, with app identifier being the extension name (case sensitive and include spaces) or extension id, it will enable or reload the specified unpacked extension.
 
@@ -101,3 +101,6 @@ chrome.tabs.query(
 * *Background scripts don't know if they are reloaded or just loaded normally.*
  
     Clerc knows the id of the reloaded extension, so it should be able to forward the reload command as a posted message.
+
+* *Sometimes pages reload randomly.*
+    This is caused by non-persistent background script calling the reload info shown in Tab Example whenever it gets activated again. Once I add functionality to pass messages to background.js, you can call that only when needed. In the meantime, plan on deleting that bit of code from production build. 
