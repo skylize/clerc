@@ -1,1 +1,2 @@
-clerc.pem
+**/*.pem
+/zip
