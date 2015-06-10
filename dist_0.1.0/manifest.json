@@ -1,5 +1,6 @@
 {
 	"name": "Clerc",
+  "hompage_url": "https://github.com/skylize/clerc",
 	"manifest_version": 2,
 	"version": "0.1.0",
 	"icons": {
