@@ -41,16 +41,22 @@ badge.set('disconnected')
 
 /////////////////////////////////////////////////////
 
-function reloadExtensions(app) {
+function reloadExtensions(msg) {
+  var app = msg.path
+
   // disable then enable 1 extension or app
   function reload (ext) {
     // false for disable, true for enable
     chrome.management.setEnabled(ext.id, false, function() {
       chrome.management.setEnabled(ext.id, true, function() {
-        // extensions done, apps still need launch
+        // func to tell extension it was auto-reloaded
+        function forwardMsg(){
+          chrome.runtime.sendMessage(ext.id, msg)
+        }
+        // apps still need launch
         if (ext.type.match(/app/))
-          chrome.management.launchApp(ext.id)
-
+          chrome.management.launchApp(ext.id, forwardMsg)
+        else forwardMsg()
         console.log(ext.name + " reloaded")
         // show an "OK" badge
         badge.tempSet('ok')
@@ -119,7 +125,7 @@ function connectSocket() {
   ws.onmessage = function socketmessage(evt) {
     var msg = JSON.parse(evt.data)
     if (msg.command === 'reload')
-      reloadExtensions(msg.path)
+      reloadExtensions(msg)
   }
 }
 
