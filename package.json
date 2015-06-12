@@ -1,6 +1,6 @@
 {
   "name": "clerc",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Live Reload client for Chrome App development.",
   "scripts": {
     "build": "gulp build",
