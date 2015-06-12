@@ -144,3 +144,5 @@ chrome.browserAction.onClicked.addListener(connectSocket)
 
 // might as well try to connect on load
 connectSocket()
+
+//# sourceMappingURL=/maps/background.js.map
