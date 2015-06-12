@@ -87,7 +87,6 @@ function autoReload (){
 
 ----
 ##Known Issues
-*(pull requests are welcome)*
 
 #### Won't get fixed
 * *Changes to manifest.json are not reflected after reload.*
@@ -109,7 +108,7 @@ function autoReload (){
 
 * *Ignores any optional parameters passed with the Reload command.*
  
-    The current incarnation has no use for any parameters except 'path' to identify the extension. Happy to consider other use cases. If functionality to reload opened popups is added, the other parameters might become more relevant.
+    I don't really know what meaning the other parameters might have to Clerc (except maybe after I address Action popup issue above). I'm happy to consider use cases. I've implemented passing the entire reload message forward to the reloaded extension, so you can do whatever you want with that data in your background script.
 
 * *Only usable on localhost.*
  
@@ -118,3 +117,29 @@ function autoReload (){
 * *Background script Dev Tools closes on reload.*
 
     I don't really know how to fix this, but plan to research it. If anyone knows what to do, please offer tips or pull request.
+
+----
+##Contribute
+
+* *Images*
+  
+    It would be nice to have the icon.svg simplified to only its visible parts, instead of the gross way I built it. An additional simpler version with 2 rings per circle instead of 4 each would be more attractive for small icon sizes. The 3 sizes of promotional images (used by Chrome Webstore to expose Clerc to users) are pretty boring. We could also use some cleverly informative and attractive 1280x800 screenshots. 
+
+* *Build environment*
+  I've populated the repo with a node.js build environment. After pulling, run `npm install` to get dependencies. If the newest (highest number) `dist` folder is the same as you installed from the webstore, run `npm version patch` then `gulp build` before you start. Install the newest `dist` folder into Chrome and disable the webstore copy. If you change the manifest, run `gulp manifest`. Autobuild the js files while you work by typing `gulp watch`. For now you will have to manually reload Clerc after changes, but I'm thinking about making it reload itself also.
+
+* *Tests*
+    
+    A good test suite would be very helpful moving forward
+
+* *Known Issues*
+
+    Please consider handling one of the issues listed above before implementing your own ideas.
+
+* *Your own ideas*
+
+    Try anything you want and send a pull request for consideration. 
+
+* *Options page*
+    
+    If you want to add a feature that needs to be optional, please make a basic options page first.
