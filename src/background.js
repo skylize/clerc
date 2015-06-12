@@ -2,15 +2,6 @@
 /*global setTimeout, setInterval, clearInterval*/
 'use strict';
 
-/////////////////////////////////////////////////////
-
-chrome.runtime.onInstalled.addListener(function(details) {
-  chrome.tabs.create({url: 'https://github.com/skylize/clerc'})
-})
-
-
-/////////////////////////////////////////////////////
-
 var badge = {
   badge: 'hide',
   badges: {

@@ -1,0 +1,12 @@
+{
+  "globals": {
+    "require":true, 
+    "module": true, 
+    "document": "window"
+  },
+  "asi": true, 
+  "globalstrict": true, 
+  "futurehostile":true,
+  "laxbreak": true,
+  "laxcomma": true
+}
