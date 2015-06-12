@@ -143,7 +143,7 @@ function dev (){
 gulp.task('manifest', manifest)
 gulp.task('img', img)
 gulp.task('scripts', scripts)
-gulp.task('gitAdd', git)
+gulp.task('git', git)
 
 // TODO: MAKE TESTS!!!!
 
