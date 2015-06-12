@@ -4,6 +4,8 @@
 ##for Chrome™ Live Extension Reloading Client
 Provides a basic client with minimal Live Reload compatibility for Chrome™ App Development.
 
+[Install Clerc](https://chrome.google.com/webstore/detail/clerc/dncedehofgbacgaojmingbdfogecjjbj)
+
 ----
 ##Usage
 * Activate your [Live Reload](http://livereload.com) (or compatible) server to watch for file changes. With the server running, click the Clerc icon in Chrome to start listening for reload commands on `localhost:35729`.
@@ -53,19 +55,31 @@ gulp.task('dev', dev)
 
 ----
 ##Tab Example
-Select and refresh the relevant tabs as required by your app.
+Clerc forwards the Reload message to your extension. You can then choose to refresh any relevant tabs as required.
 
 ```javascript
 // -background.js
 
-chrome.tabs.query( 
-  { url: '*://*.amazon.com/*' },
-  function (tabs) {
-    tabs.forEach(function (tab){
-      chrome.tabs.reload(tab.id)
-    })
+chrome.runtime.onMessageExternal.addListener(
+  function(msg, sender, resp) {
+    console.log(msg)
+    if (msg.command && msg.command === 'reload')
+      autoReload()
   }
-)
+);
+
+function autoReload (){
+  console.log('autoreload')
+  chrome.tabs.query( 
+    { url: 'https://www.amazon.com/*/*' },
+    function (tabs) {
+      console.log('tabs', tabs)
+      tabs.forEach(function (tab){
+        chrome.tabs.reload(tab.id)
+      })
+    }
+  )
+}
 ```
 
 ----
@@ -86,7 +100,7 @@ chrome.tabs.query(
 #### Might get fixed
 * *Page Action popups and Browser Action popups still require a click.*
     
-    Clerc was built to attack a different problem, namely Content Scripts which won't refresh at all without disabling or uninstalling.
+    Clerc was originally intended for a different problem, namely Content Scripts which won't refresh at all without disabling or uninstalling.
  
     These popups will naturally refresh without reloading the whole extension. If you *only* need reloading for your Action popups, I suspect the official [LiveReload](http://livereload.com) extension might be up to the job.
 
@@ -98,9 +112,6 @@ chrome.tabs.query(
  
     This is unlikely to get fixed by me, but open to pull requests if someone else cares enough to deal with it.
 
-* *Background scripts don't know if they are reloaded or just loaded normally.*
- 
-    Clerc knows the id of the reloaded extension, so it should be able to forward the reload command as a posted message.
+* *Background script Dev Tools closes on reload.*
 
-* *Sometimes pages reload randomly.*
-    This is caused by non-persistent background script calling the reload info shown in Tab Example whenever it gets activated again. Once I add functionality to pass messages to background.js, you can call that only when needed. In the meantime, plan on deleting that bit of code from production build. 
+    I don't really know how to fix this, but plan to research it. If anyone knows what to do, please offer tips or pull request.
