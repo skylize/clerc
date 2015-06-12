@@ -60,20 +60,23 @@ Clerc forwards the Reload message to your extension. You can then choose to refr
 ```javascript
 // -background.js
 
+// listen for message from external extensions
 chrome.runtime.onMessageExternal.addListener(
   function(msg, sender, resp) {
-    console.log(msg)
+
+    // reload if you get a reload command
     if (msg.command && msg.command === 'reload')
       autoReload()
   }
 );
 
 function autoReload (){
-  console.log('autoreload')
-  chrome.tabs.query( 
-    { url: 'https://www.amazon.com/*/*' },
+
+  // look for relevant tabs, here using anything on Amazon
+  chrome.tabs.query( { url: 'https://*.amazon.com/*/*' },
     function (tabs) {
-      console.log('tabs', tabs)
+
+      // refresh any tabs found
       tabs.forEach(function (tab){
         chrome.tabs.reload(tab.id)
       })
