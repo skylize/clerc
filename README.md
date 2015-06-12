@@ -12,9 +12,11 @@ Provides a basic client with minimal Live Reload compatibility for Chrome™ App
 
 * If Clerc receives a message including the attributes ``{command: 'reload', path: ''}``, it will reload all enabled unpacked extensions and apps.
 
-* If Clerc receives a message including the attributes ``{command: 'reload', path: 'app_identifier'}``, with app identifier being the extension name (case sensitive and include spaces) or extension id, it will enable or reload the specified unpacked extension.
+* If Clerc receives a message including the attributes ``{command: 'reload', path: 'app_identifier'}``, with `{app identifier}` being the extension id or case sensitive extension name, it will enable or reload the specified unpacked extension.
 
-* If you want any pages refreshed on reload, then select and reload the relevant tabs from your background script using the Tabs API.
+* If you want any pages refreshed on reloaded, then select and reload the relevant tabs from your background script using the Tabs API.
+
+* *WARNING*: The `path: ''` and `path:{app_identifier}` syntax may break on a future update when solving the Page/Browser Action popups issue. Return here for new usage if it quits working.
 
 ----
 ## Server example
@@ -102,7 +104,7 @@ function autoReload (){
 #### Might get fixed
 * *Page Action popups and Browser Action popups still require a click.*
     
-    Clerc was originally intended for a different problem, namely Content Scripts which won't refresh at all without disabling or uninstalling.
+    Clerc was originally intended for a different problem, namely Content Scripts which won't refresh at all without disabling or uninstalling. Fixing this may break the current syntax.
  
     These popups will naturally refresh without reloading the whole extension. If you *only* need reloading for your Action popups, I suspect the official [LiveReload](http://livereload.com) extension might be up to the job.
 
@@ -112,11 +114,11 @@ function autoReload (){
 
 * *Only usable on localhost.*
  
-    This is unlikely to get fixed by me, but open to pull requests if someone else cares enough to deal with it.
+    This seems like an edge case to me, and I probably won't fix it. But I'm open to pull requests if somebody cares enough to work out what's needed.
 
 * *Background script Dev Tools closes on reload.*
 
-    I don't really know how to fix this, but plan to research it. If anyone knows what to do, please offer tips or pull request.
+    I don't really know how to fix this, but plan to research it. If anyone knows what to do, please offer tips or a pull request.
 
 ----
 ##Contribute
@@ -126,7 +128,7 @@ function autoReload (){
     It would be nice to have the icon.svg simplified to only its visible parts, instead of the gross way I built it. An additional simpler version with 2 rings per circle instead of 4 each would be more attractive for small icon sizes. The 3 sizes of promotional images (used by Chrome Webstore to expose Clerc to users) are pretty boring. We could also use some cleverly informative and attractive 1280x800 screenshots. 
 
 * *Build environment*
-  I've populated the repo with a node.js build environment. After pulling, run `npm install` to get dependencies. If the newest (highest number) `dist` folder is the same as you installed from the webstore, run `npm version patch` then `gulp build` before you start. Install the newest `dist` folder into Chrome and disable the webstore copy. If you change the manifest, run `gulp manifest`. Autobuild the js files while you work by typing `gulp watch`. For now you will have to manually reload Clerc after changes, but I'm thinking about making it reload itself also.
+  I've populated the repo with a node.js build environment. After pulling, run `npm install` to get dependencies. If the newest (highest number) `dist` folder is the same as on the webstore, run `npm version patch` then `gulp build` before you start. Install the newest `dist` folder into Chrome and disable the webstore copy. If you change the manifest, run `gulp manifest`. Autobuild js files while you work with `gulp watch`. For now you will have to manually reload Clerc after changes, but I'm thinking about making it reload itself also.
 
 * *Tests*
     
@@ -142,4 +144,4 @@ function autoReload (){
 
 * *Options page*
     
-    If you want to add a feature that needs to be optional, please make a basic options page first.
+    If you want to add a feature that should be optional, then please make a basic options page first.
