@@ -4,7 +4,7 @@
 ##for Chrome™ Live Extension Reloading Client
 Provides a basic client with minimal Live Reload compatibility for Chrome™ App Development.
 
-[Install Clerc](https://chrome.google.com/webstore/detail/clerc/dncedehofgbacgaojmingbdfogecjjbj)
+[Install Clerc from the Chrome™ Webstore](https://chrome.google.com/webstore/detail/clerc/dncedehofgbacgaojmingbdfogecjjbj)
 
 ----
 ##Usage
