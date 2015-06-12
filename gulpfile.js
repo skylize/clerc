@@ -17,7 +17,7 @@ var pkg = require('./package.json')
   , through = require('through2')
 
 
-var ENC = 'ascii' // ascii is faster, I don't need utf8
+var ENC = 'utf8' // ascii is faster, but has no TM symbol utf8
   , SRC = 'src'
   , DEST = 'dist_'+pkg.version
 

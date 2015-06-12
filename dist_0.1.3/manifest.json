@@ -13,7 +13,7 @@
 		"48": "img/icon48.png",
 		"128": "img/icon128.png"
 	},
-  "description": "for Chromeb" Live Extension Reloading Client. Lets you use Live Reload for your Chromeb" App development.",
+  "description": "for Chrome™ Live Extension Reloading Client. Lets you use Live Reload for your Chrome™ App development.",
 	"background": {
 		"scripts": ["background.js"],
     "persistent": false
