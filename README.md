@@ -130,7 +130,7 @@ function autoReload (){
 
 * *Tests*
     
-    A good test suite would be very helpful moving forward
+    A good test suite would be very helpful moving forward.
 
 * *Known Issues*
 
