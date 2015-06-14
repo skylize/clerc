@@ -3,8 +3,7 @@
   "version": "0.1.4",
   "description": "Live Reload client for Chrome App development.",
   "scripts": {
-    "build": "gulp build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp build"
   },
   "repository": {
     "type": "git",
@@ -46,6 +45,7 @@
     "jshint-stylish": "^2.0.0",
     "meow": "^3.1.0",
     "minimatch": "^2.0.8",
+    "optipng": "^0.1.1",
     "optipng-bin": "^3.0.2",
     "plumber": "^0.4.8",
     "pngquant-bin": "^3.0.0",
