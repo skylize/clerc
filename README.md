@@ -1,16 +1,16 @@
 # *Clerc*
 
 ----
-##for Chrome™ Live Extension Reloading Client
+## for Chrome™ Live Extension Reloading Client
 Provides a basic client with minimal Live Reload compatibility for Chrome™ App Development.
 
 [Install Clerc from the Chrome™ Webstore](https://chrome.google.com/webstore/detail/clerc/dncedehofgbacgaojmingbdfogecjjbj)
 
 ----
-##Breaking Changes Coming
+## Breaking Changes Coming
 I am actively working on this project to make it usable out of the box with Webpack and more easily adjustable for other build tools without a bunch of code configuration. There may be breaking changes on release.
 
-##Usage
+## Usage
 * Activate your [Live Reload](http://livereload.com) (or compatible) server to watch for file changes. With the server running, click the Clerc icon in Chrome to start listening for reload commands on `localhost:35729`.
 
 * If Clerc receives a message including the attributes ``{command: 'reload', path: ''}``, it will reload all enabled unpacked extensions and apps.
@@ -91,7 +91,7 @@ function autoReload (){
 ```
 
 ----
-##Known Issues
+## Known Issues
 
 #### Won't get fixed
 * *Changes to manifest.json are not reflected after reload.*
@@ -124,7 +124,7 @@ function autoReload (){
     I don't really know how to fix this, but plan to research it. If anyone knows what to do, please offer tips or a pull request.
 
 ----
-##Contribute
+## Contribute
 
 * *Images*
 
