@@ -3,7 +3,9 @@
   "version": "0.1.4",
   "description": "Live Reload client for Chrome App development.",
   "scripts": {
-    "build": "gulp build"
+    "build": "NODE_ENV=production webpack --colors",
+    "watch": "webpack --progress --colors --watch",
+    "live": "webpack-dev-server --progress --colors"
   },
   "repository": {
     "type": "git",
@@ -25,35 +27,57 @@
   },
   "homepage": "https://github.com/skylize/clerc#readme",
   "comment": "Some of these modules are installed to reduce complexity of dependency tree.",
-  "devDependencies": {
-    "buffer-to-vinyl": "^1.0.0",
-    "concat-stream": "^1.4.10",
-    "decompress": "^2.3.0",
-    "del": "^1.2.0",
-    "download": "^4.1.2",
-    "gulp": "^3.9.0",
-    "gulp-imagemin": "^2.2.1",
-    "gulp-jshint": "^1.11.0",
-    "gulp-plumber": "^1.0.1",
-    "gulp-sourcemaps": "^1.5.2",
-    "gulp-uglify": "^1.2.0",
-    "gulp-util": "^3.0.5",
-    "gulp-zip": "^3.0.2",
-    "imagemin": "^3.2.0",
-    "imagemin-pngquant": "^4.1.0",
-    "is-png": "^1.0.0",
-    "jshint-stylish": "^2.0.0",
-    "meow": "^3.1.0",
-    "minimatch": "^2.0.8",
-    "optipng": "^0.1.1",
-    "optipng-bin": "^3.0.2",
-    "plumber": "^0.4.8",
-    "pngquant-bin": "^3.0.0",
-    "through2": "^0.6.5",
-    "vinyl": "^0.5.0",
-    "vinyl-fs": "^1.0.0"
+  "eslintIgnore": [
+    "build/*",
+    "dist*/*"
+  ],
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": true,
+      "es6": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "sourceType": "module",
+      "ecmaVersion": 2017
+    },
+    "rules": {
+      "no-console": 0,
+      "indent": [
+        "error",
+        2
+      ],
+      "quotes": [
+        "error",
+        "single",
+        {
+          "avoidEscape": true
+        }
+      ],
+      "semi": [
+        "error",
+        "never"
+      ],
+      "no-unused-vars": [
+        "off",
+        {
+          "caughtErrors": "none",
+          "vars": "local"
+        }
+      ]
+    }
   },
-  "dependencies": {
-    "lodash": "^3.9.3"
-  }
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.16",
+    "copy-webpack-plugin": "^4.0.1",
+    "eslint": "^4.6.1",
+    "file-loader": "^0.11.2",
+    "image-webpack-loader": "^3.4.2",
+    "str-replace-loader": "^1.0.1",
+    "webpack": "^3.5.6",
+    "webpack-dev-server": "^2.7.1",
+    "webpack-watch-livereload-plugin": "0.0.1"
+  },
+  "dependencies": {}
 }
