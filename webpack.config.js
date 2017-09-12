@@ -7,12 +7,20 @@ const LiveReload = require('webpack-watch-livereload-plugin')
 console.log('env', process.env.NODE_ENV)
 
 const plugins = ( () => {
-  const plugins = []
-  process.env.NODE_ENV === 'production'
-    && plugins.push(new CleanPlugin('build')),
-  process.env.NODE_ENV !== 'production'
-    && plugins.push(new LiveReload('build/*'))
-  return plugins
+  const all = []
+
+  const production = [
+    new CleanPlugin('build')
+  ]
+
+  const dev = [
+    new LiveReload('build/*')
+  ]
+
+  return all.concat(
+    process.env.NODE_ENV === 'production'
+      ? production
+      : dev )
 })()
 
 const version = require('./package.json').version
