@@ -1,6 +1,6 @@
 /* global chrome */
 
-console.log('Fake plugin running fine')
+console.log('Fake plugin started')
 
 // listen for message from external extensions
 chrome.runtime.onMessageExternal.addListener(
@@ -12,6 +12,6 @@ chrome.runtime.onMessageExternal.addListener(
     {
       console.log('received reload command')
     }
+    
   }
-  
 )
