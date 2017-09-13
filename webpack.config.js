@@ -2,7 +2,6 @@
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
-const LiveReload = require('webpack-watch-livereload-plugin')
 
 const plugins = ( () => {
   const all = []
@@ -11,9 +10,7 @@ const plugins = ( () => {
     new CleanPlugin('build')
   ]
 
-  const dev = [
-    new LiveReload('build/*')
-  ]
+  const dev = []
 
   return all.concat(
     process.env.NODE_ENV === 'production'
@@ -28,10 +25,10 @@ module.exports = {
   entry: {
     'background': './background.js',
     'manifest': './manifest.json',
-    'img': './img/index.js',
-    'fakie': '../fake-plugin/background.js'
+    'img': './img/index.js'
   },
   plugins,
+  devtool: (process.env.NODE_ENV !== 'production') && 'source-map',
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'build'),

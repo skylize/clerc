@@ -4,8 +4,7 @@
   "description": "Live Reload client for Chrome App development.",
   "scripts": {
     "build": "NODE_ENV=production webpack --colors",
-    "watch": "webpack --progress --colors --watch",
-    "live": "webpack-dev-server --progress --colors"
+    "watch": "webpack --watch --progress --colors"
   },
   "repository": {
     "type": "git",
@@ -75,9 +74,7 @@
     "file-loader": "^0.11.2",
     "image-webpack-loader": "^3.4.2",
     "str-replace-loader": "^1.0.1",
-    "webpack": "^3.5.6",
-    "webpack-dev-server": "^2.7.1",
-    "webpack-watch-livereload-plugin": "0.0.1"
+    "webpack": "^3.5.6"
   },
   "dependencies": {}
 }
