@@ -1,4 +1,6 @@
-**/*.pem
+/fake-plugin/node_modules
+/fake-plugin/build
 /node_modules
+**/*.pem
 /build
 /zip
