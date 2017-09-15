@@ -1,6 +1,5 @@
-/*global chrome, console, WebSocket */
-/*global setTimeout, setInterval, clearInterval*/
-'use strict';
+/* global chrome */
+import liveReloadSocket from './livereload.js'
 
 var badge = {
   badge: 'hide',
@@ -10,7 +9,7 @@ var badge = {
     no: [' NO ', '#f33'],
     connected: ['-(c-', [42,181,130,200]],
     // not using disconnect badge b/c visually dominating
-    disconnected: ['-(  c-', [179,179,29,200]]
+    disconnected: ['-(  c-', [179,179,29,200]],
   },
 
   set: function (b){
@@ -34,8 +33,7 @@ var badge = {
     setTimeout(function (){
       badge.set(b)
     }, delay||1200)
-  }
-
+  },
 }
 // we'll start with disconnected badge
 // badge.set('hide')
@@ -58,26 +56,26 @@ function reloadExtensions(msg) {
         if (ext.type.match(/app/))
           chrome.management.launchApp(ext.id, forwardMsg)
         else forwardMsg()
-        console.log(ext.name + " reloaded")
-        // show an "OK" badge
+        console.log(ext.name + ' reloaded')
+        // show an 'OK' badge
         badge.tempSet('ok')
       })
     })
   }
 
   chrome.management.getAll(function(extensions) {
-    extensions = extensions.filter(function (ext){   
+    extensions = extensions.filter(function (ext){
       return (
         // installed as unpacked folder
-        (ext.installType==="development")
+        (ext.installType==='development')
         // if app not specified, only reload enabled
         && (app || ext.enabled===true)
         // restrict to app name or id if given
-        && ( (!app) || app===ext.name
-          || app===ext.id)
+        // && ( (!app) || app===ext.name
+        //   || app===ext.id)
         // Clerc shouldn't reload itself
         && (ext.id !==chrome.runtime.id)
-      ) 
+      )
     })
     extensions.forEach(reload)
   })
@@ -85,62 +83,50 @@ function reloadExtensions(msg) {
 
 //////////////////////////////////////////////
 
-var ws
-
-function connectSocket() {
-  // don't open a bunch of duplicate sockets
-  if (ws && ws.readyState !== 3) 
-    return
-  
-  ws = new WebSocket('ws://localhost:35729/livereload')
-
-  var handshake = {
-    command: 'hello',
-    protocols: [
-        'http://livereload.com/protocols/official-7',
-        'http://livereload.com/protocols/official-8',
-        'http://livereload.com/protocols/2.x-origin-version-negotiation'],
-  }
-  handshake = JSON.stringify(handshake)
-
-  ws.onerror = function (){
-    badge.set('no')
-    badge.delay('hide', 1200)
-    console.log('failed to connect to livereload')
-  }
-
-  ws.onopen = function socketopen(){
-    console.log('connected to livereload')
-    
-    ws.send(handshake)
-
-    badge.set('ok')
-    badge.delay('connected', 1200)
-    
-    chrome.browserAction.onClicked.removeListener(connectSocket)
-    chrome.browserAction.onClicked.addListener(disconnectSocket)
-
-    ws.onclose = onClosedSocket
-  }
-
-  ws.onmessage = function socketmessage(evt) {
-    var msg = JSON.parse(evt.data)
-    if (msg.command === 'reload')
-      reloadExtensions(msg)
-  }
+const messenger = {
+  message (msg){
+    console.log('messenger', msg)
+    if (msg && msg.error)
+      return onError(msg.error)
+    reloadExtensions(msg)
+  },
 }
 
-function onClosedSocket(){
+const onOpen = ()=> {
+  console.log('connected to livereload')
+  badge.set('ok')
+  badge.delay('connected', 1200)
+  chrome.browserAction.onClicked.removeListener(connect)
+  chrome.browserAction.onClicked.addListener(disconnect)
+}
+
+const onClosed = ()=> {
   console.log('disconnected from livereload')
   badge.set('hide')
-  chrome.browserAction.onClicked.removeListener(disconnectSocket)
-  chrome.browserAction.onClicked.addListener(connectSocket)
-  ws.onclose = null
+  chrome.browserAction.onClicked.removeListener(disconnect)
+  chrome.browserAction.onClicked.addListener(connect)
 }
 
-function disconnectSocket() { ws.close() }
+const onError = err=> {
+  badge.set('no')
+  badge.delay('hide', 1200)
+  console.error(err)
+}
 
-chrome.browserAction.onClicked.addListener(connectSocket)
+const lrSocket = liveReloadSocket({
+  onOpen,
+  onClosed,
+  WebSocket,
+  messenger,
+  onError,
+})
 
-// might as well try to connect on load
-connectSocket()
+const connect = ()=> lrSocket.connect()
+const disconnect = ()=> lrSocket.disconnect()
+chrome.browserAction.onClicked.addListener(()=> lrSocket.connect())
+
+
+
+
+
+////
