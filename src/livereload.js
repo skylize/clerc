@@ -1,3 +1,4 @@
+
 const handshake = JSON.stringify({
   command: 'hello',
   protocols: [
@@ -48,52 +49,15 @@ const makeLivereloadSocket =  ({
   messenger = unimplemented.messenger,
 })=> {
 
-  let socket // active socket goes here
+  let socket // insert active socket here ;)
 
   function parseMsg(evt) {
     let msg
-    try {msg = JSON.parse(evt.data) }
-    catch (e) {
-      socket.close()
-      onError(e)
-    }
+    try { msg = JSON.parse(evt.data) }
+    catch (e) { onError(
+      new Error('Invalid JSON from LiveReload server.')
+    )}
     return msg
-  }
-
-  // Must receive hello from server before accepting
-  // any other messages.
-  function hello(evt) {
-    const msg = parseMsg(evt)
-    if (msg && msg.command === 'hello')
-      listen()
-    else {
-      socket.close()
-      onError(
-        new Error('Invalid "hello" from server'))
-    }
-  }
-
-  function onSocketOpen() {
-    socket.send(handshake)
-    socket.onmessage = hello
-  }
-
-  function onSocketClose() {
-    // a little light cleanup
-    ['onclose', 'onopen', 'onerror', 'onmessage']
-      .forEach(listener=>
-        delete socket[listener])
-
-    onClose()
-  }
-
-  function listen() {
-    socket.onmessage = evt=> {
-      const msg = parseMsg(evt)
-      if (msg.command === 'reload')
-        messenger.message(msg)
-    }
-    onOpen()
   }
 
   function connect() {
@@ -113,10 +77,51 @@ const makeLivereloadSocket =  ({
     return socket
   }
 
-  function disconnect() {
-    if (socket && socket.close)
+  // Must receive hello from server before other messages.
+  //
+  function hello(evt) {
+    const msg = parseMsg(evt)
+    if (!msg)
+      return void socket.close()
+
+    if (msg.command === 'hello')
+      listen()
+    else {
       socket.close()
+      onError(
+        new Error('Invalid "hello" from server'))
+    }
+  }
+
+  function onSocketOpen() {
+    socket.send(handshake)
+    socket.onmessage = hello
+  }
+
+  function listen() {
+    socket.onmessage = evt=> {
+      const msg = parseMsg(evt)
+      if (!msg)
+        return void socket.close()
+
+      if (msg.command === 'reload')
+        messenger.message(msg)
+    }
+    onOpen()
+  }
+
+  function disconnect() {
+    if (socket && socket.close) socket.close()
     return socket
+  }
+
+  function onSocketClose() {
+    // a little light cleanup
+    ['onclose', 'onopen', 'onerror', 'onmessage']
+      .forEach(listener=>
+        delete socket[listener])
+
+    onClose()
   }
 
   return { connect, disconnect }
