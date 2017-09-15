@@ -3,8 +3,20 @@
   "version": "0.1.4",
   "description": "Live Reload client for Chrome App development.",
   "scripts": {
+    "test": "ava -v --color src/**/*.test.js",
+    "watch-test": "ava -wv --color src/**/*.test.js &",
     "build": "NODE_ENV=production webpack --colors",
-    "watch": "webpack --watch --progress --colors"
+    "watch": "webpack --watch --progress --colors",
+    "watch-fake": "sh -c 'cd fake-plugin && npm run watch &'"
+  },
+  "ava": {
+    "require": "babel-register",
+    "babel": "inherit"
+  },
+  "babel": {
+    "presets": [
+      "@ava/stage-4"
+    ]
   },
   "repository": {
     "type": "git",
@@ -25,7 +37,6 @@
     "url": "https://github.com/skylize/clerc/issues"
   },
   "homepage": "https://github.com/skylize/clerc#readme",
-  "comment": "Some of these modules are installed to reduce complexity of dependency tree.",
   "eslintIgnore": [
     "build/*",
     "dist*/*"
@@ -58,6 +69,10 @@
         "error",
         "never"
       ],
+      "comma-dangle": [
+        "error",
+        "always-multiline"
+      ],
       "no-unused-vars": [
         "off",
         {
@@ -68,11 +83,14 @@
     }
   },
   "devDependencies": {
+    "ava": "^0.22.0",
     "clean-webpack-plugin": "^0.1.16",
     "copy-webpack-plugin": "^4.0.1",
     "eslint": "^4.6.1",
     "file-loader": "^0.11.2",
     "image-webpack-loader": "^3.4.2",
+    "mock-socket": "^7.0.0",
+    "sinon": "^3.2.1",
     "str-replace-loader": "^1.0.1",
     "webpack": "^3.5.6"
   },

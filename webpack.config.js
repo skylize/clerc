@@ -7,7 +7,7 @@ const plugins = ( () => {
   const all = []
 
   const production = [
-    new CleanPlugin('build')
+    new CleanPlugin('build'),
   ]
 
   const dev = []
@@ -25,7 +25,7 @@ module.exports = {
   entry: {
     'background': './background.js',
     'manifest': './manifest.json',
-    'img': './img/index.js'
+    'img': './img/index.js',
   },
   plugins,
   devtool: (process.env.NODE_ENV !== 'production') && 'source-map',
@@ -45,8 +45,8 @@ module.exports = {
             options: {
               match: '{version}',
               replace: version,
-            }
-          }
+            },
+          },
         ],
       },
       { //copy image files
@@ -56,18 +56,18 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[path][name].[ext]',
-              useRelativePath: true
-            }
+              useRelativePath: true,
+            },
           },{
             loader: 'image-webpack-loader',
             options: {
               optipng: {
                 optimizationLevel: 7,
               },
-            }
-          }
-        ]
-      }
-    ]
-  }
+            },
+          },
+        ],
+      },
+    ],
+  },
 }
