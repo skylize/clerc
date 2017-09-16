@@ -1,0 +1,15 @@
+{
+	"name": "Clerc Dev > Fake Plugin",
+  "short_name": "Fake-Plugin",
+  "homepage_url": "https://github.com/skylize/clerc",
+	"manifest_version": 2,
+	"version": "1.0",
+	"icons": {
+		"48": "icon48.png"
+	},
+  "description": "Fake plugin for integration testing of Clerc Chrome extension.",
+	"background": {
+		"scripts": ["background.js"],
+    "persistent": false
+	}
+}
