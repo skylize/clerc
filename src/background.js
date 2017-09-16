@@ -7,7 +7,7 @@ var badge = {
     hide: [''],
     ok: [' OK ', '#44992c'],
     no: [' NO ', '#f33'],
-    connected: ['-(c-', [42,181,130,200]],
+    connected: ['-(c- ', [42,181,130,200]],
     // not using disconnect badge b/c visually dominating
     disconnected: ['-(  c-', [179,179,29,200]],
   },
@@ -100,7 +100,7 @@ const onOpen = ()=> {
   chrome.browserAction.onClicked.addListener(disconnect)
 }
 
-const onClosed = ()=> {
+const onClose = ()=> {
   console.log('disconnected from livereload')
   badge.set('hide')
   chrome.browserAction.onClicked.removeListener(disconnect)
@@ -115,7 +115,7 @@ const onError = err=> {
 
 const lrSocket = liveReloadSocket({
   onOpen,
-  onClosed,
+  onClose,
   WebSocket,
   messenger,
   onError,
