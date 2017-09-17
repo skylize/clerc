@@ -4,11 +4,10 @@
   "description": "Live Reload client for Chrome App development.",
   "scripts": {
     "test": "ava -v --color src/**/*.test.js",
-    "watch-test": "ava -wv --color ./src/**/*.test.js &",
+    "watch-test": "ava -wv --color ./src/**/*.test.js",
     "build": "NODE_ENV=production webpack --colors",
-    "watch": "webpack --watch --progress --colors &",
-    "watch-fake": "sh -c 'cd fake-plugin && npm run watch &'",
-    "watch-all": "npm run watch && npm run watch-test"
+    "watch": "webpack --watch --progress --colors",
+    "watch-fake": "sh -c 'cd fake-plugin && npm run watch'"
   },
   "ava": {
     "require": "babel-register",
