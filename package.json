@@ -3,9 +3,10 @@
   "version": "0.1.4",
   "description": "Live Reload client for Chrome App development.",
   "scripts": {
-    "test": "ava -v --color src/**/*.test.js",
-    "watch-test": "ava -wv --color ./src/**/*.test.js",
+    "test": "ava -v -c 4 --color src/**/*.test.js",
+    "watch-test": "ava -wv -c 4 --color ./src/**/*.test.js",
     "build": "NODE_ENV=production webpack --colors",
+    "debug-test": "node --inspect node_modules/ava/profile.js",
     "watch": "webpack --watch --progress --colors",
     "watch-fake": "sh -c 'cd fake-plugin && npm run watch'"
   },
