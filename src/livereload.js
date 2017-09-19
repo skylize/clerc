@@ -190,8 +190,7 @@ function makeLivereloadSocket ({
   function onSocketClose() {
     // some light cleanup
     ['onclose', 'onopen', 'onerror', 'onmessage']
-      .forEach(listener=>
-        delete socket[listener])
+      .forEach(listener=>socket[listener] = void 0)
     socket = void 0
 
     onClose() // consumer provided callback
