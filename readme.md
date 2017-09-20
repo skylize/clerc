@@ -1,150 +1,92 @@
 # *Clerc*
 
-----
 ## for Chrome™ Live Extension Reloading Client
-Provides a basic client with minimal Live Reload compatibility for Chrome™ App Development.
+
+---
+Provides a basic client with minimal LiveReload compatibility for Chrome™ Extension Development.
 
 [Install Clerc from the Chrome™ Webstore](https://chrome.google.com/webstore/detail/clerc/dncedehofgbacgaojmingbdfogecjjbj)
 
 ----
-## Breaking Changes Coming
-I am actively working on this project to make it usable out of the box with Webpack and more easily adjustable for other build tools without a bunch of code configuration. There may be breaking changes on release.
-
 ## Usage
-* Activate your [Live Reload](http://livereload.com) (or compatible) server to watch for file changes. With the server running, click the Clerc icon in Chrome to start listening for reload commands on `localhost:35729`.
 
-* If Clerc receives a message including the attributes ``{command: 'reload', path: ''}``, it will reload all enabled unpacked extensions and apps.
+1. Install [from the Chrome™ Webstore](https://chrome.google.com/webstore/detail/clerc/dncedehofgbacgaojmingbdfogecjjbj)
 
-* If Clerc receives a message including the attributes ``{command: 'reload', path: 'app_identifier'}``, with `{app identifier}` being the extension id or case sensitive extension name, it will enable or reload the specified unpacked extension.
+1. Activate your [LiveReload](http://livereload.com) compatible server to watch for file changes.
 
-* If you want any pages refreshed on reloaded, then select and reload the relevant tabs from your background script using the Tabs API.
+1. After the server starts, click the Clerc icon in Chrome™ to connect Clerc to your server.
 
-* *WARNING*: The `path: ''` and `path:{app_identifier}` syntax may break on a future update when solving the Page/Browser Action popups issue. Return here for new usage if it quits working.
+1. If Clerc receives any `reload` message, it will reload all enabled Developer Mode extensions and apps.
 
-----
-## Server example
-Example uses a gulp task to start tiny-lr server and watch files. Neither gulp nor tiny-lr is required.
+Bonus:
 
-All that matters is you have **some way to watch for file changes** (here using ``gulp.watch()``) and a **running livereload compliant server** (here using ``tiny-lr``). The server must accept websocket connections on port 35729 and emit properly formatted ``reload`` commands on the same port.
-
-```javascript
-// -gulpfile.js
-
-var gulp = require('gulp')
-  , tinylr = require('tiny-lr')
-
-function dev (){
-  // start livereload server
-  var lr = tinylr()
-  lr.listen(35729)
-
-  // glob describing files to watch
-  var watch_glob = 'build/**/*.js'
-
-  // monitor files using gulp's built-in watch
-  var watcher = gulp.watch(watch_glob)
-
-  // Alternative 1: empty string to reload all
-  var extension = ''
-  // Alternative 2: specify extension to enable or reload
-  extension = 'My Awesome Extension'
-
-  watcher.on('change', function (evt){
-    // emit "reload" to all livereload clients
-    lr.changed({body: {files: [extension]}})
-  })
-}
-
-gulp.task('dev', dev)
-```
+* Clerc will forward the reload message as a [`chrome.runtime`](https://developer.chrome.com/apps/runtime) message to the background script of any reloaded extensions. You can [listen for the message](https://developer.chrome.com/apps/messaging) and respond by doing any additional reloading activity, such as refrehsing certain tabs.
 
 ----
-##Tab Example
-Clerc forwards the Reload message to your extension. You can then choose to refresh any relevant tabs as required.
+## What does this work with?
 
+* Clerc should work with any LiveReload compatible server.
+
+* For `webpack`, my current suggestion is [`webpack-livereload-plugin`](https://www.npmjs.com/package/webpack-livereload-plugin). You cannot use `webpack-dev-server` for Chrome™ Extensions because it stores built files in memory instead of on disk.
+----
+## Example Listener
+In addition to reloading your extension, Clerc forwards the Reload message to your extension through `chrome.runtime`. This example listens for that message and then uses the `tabs` API to refresh all open tabs on amazon.com
+
+_background.js_
 ```javascript
-// -background.js
 
-// listen for message from external extensions
-chrome.runtime.onMessageExternal.addListener(
-  function(msg, sender, resp) {
+// listen for message from any external extensions
+chrome.runtime.onMessageExternal.addListener(msg =>
+  // reload if you get a reload command
+  if (msg.command === 'reload')
+    reloadAmazon()
+)
 
-    // reload if you get a reload command
-    if (msg.command && msg.command === 'reload')
-      autoReload()
-  }
-);
-
-function autoReload (){
-
+function reloadAmazon (){
   // look for relevant tabs, here using anything on Amazon
-  chrome.tabs.query( { url: 'https://*.amazon.com/*/*' },
-    function (tabs) {
+  chrome.tabs.query(
+    { url: 'https://*.amazon.com/*' },
 
+    tabs =>
       // refresh any tabs found
-      tabs.forEach(function (tab){
+      tabs.forEach(tab =>
         chrome.tabs.reload(tab.id)
-      })
-    }
+      )
   )
 }
 ```
 
+---
+## Planned Features
+
+* Change host and port
+
+* Blacklist extensions from reloading
+
+* BrowerSync
+
 ----
 ## Known Issues
 
-#### Won't get fixed
-* *Changes to manifest.json are not reflected after reload.*
+* _Changes to manifest.json are not reflected after reload._
 
-    You will need to reload manually in that case. Reloading manifest.json requires an uninstall/install action that occurs when you reload from the chrome://extensions window. Clerc can uninstall, but cannot install your extension. The next best option disable/enable, works fine for all files except manifest.json.
+    The `manifest.json` is a special case that causes strange somewhat behaviors when trying to reload. The short version of this bug is that if you have any mistakes in your manifest, Chrome™ will revert to the old "good" manifest, and will ignore further reload it. When making any changes to `manifest.json` you should disconnect Clerc temporarily and reload by hand.o call ``reload()`` again.
 
-    As a side note: calling ``chrome.runtime.reload()`` from inside your extension will reload the manifest. However, if your manifest is invalid, the app will remain partially active, partially broken, and unable to call ``reload()`` again.
+* _Tabs aren't refreshed._
 
-* *Tabs aren't refreshed.*
+    In most cases you wouldn't want every single tab refreshed; it should be limited to the tabs your extension will actually act on. Currently it is your own responsibility to reload any required tabs after Clerc forwards the reload message to your extensions. I do have plans to add a Browser Action page where you can input url globs to reload.
 
-    In most cases you wouldn't want every single tab refreshed; it should be limited to the tabs your extension will actually act on. As such, it is your responsibility to reload the tabs you need in your background script. (simple example above)
 
-#### Might get fixed
-* *Page Action popups and Browser Action popups still require a click.*
+* _Page Action popups and Browser Action popups still require a click._
 
-    Clerc was originally intended for a different problem, namely Content Scripts which won't refresh at all without disabling or uninstalling. Fixing this may break the current syntax.
+    This is a small nuisance that I don't really know how to get around. Clerc is mainly intended to deal with the larger problem that Content Scripts won't refresh at all unless you disable or uninstall the extension, while also making it possible to auto reload the webpages that you are affecting.
 
-    These popups will naturally refresh without reloading the whole extension. If you *only* need reloading for your Action popups, I suspect the official [LiveReload](http://livereload.com) extension might be up to the job.
+    These popups will naturally refresh from your build folder without reloading the whole extension. You only need to click away from them and click on the icon again.
 
-* *Ignores any optional parameters passed with the Reload command.*
+* _Background script Dev Tools closes on reload._
 
-    I don't really know what meaning the other parameters might have to Clerc (except maybe after I address Action popup issue above). I'm happy to consider use cases. I've implemented passing the entire reload message forward to the reloaded extension, so you can do whatever you want with that data in your background script.
+    I have no idea how to fix this. If anyone knows what to do, please offer tips or a pull request.
 
-* *Only usable on localhost.*
+* _Browserify bundled submodules don't refresh_
 
-    This seems like an edge case to me, and I probably won't fix it. But I'm open to pull requests if somebody cares enough to work out what's needed.
-
-* *Background script Dev Tools closes on reload.*
-
-    I don't really know how to fix this, but plan to research it. If anyone knows what to do, please offer tips or a pull request.
-
-----
-## Contribute
-
-* *Images*
-
-    It would be nice to have the icon.svg simplified to only its visible parts, instead of the gross way I built it. An additional simpler version with 2 rings per circle instead of 4 each would be more attractive for small icon sizes. The 3 sizes of promotional images (used by Chrome Webstore to expose Clerc to users) are pretty boring. We could also use some cleverly informative and attractive 1280x800 screenshots.
-
-* *Build environment*
-  I've populated the repo with a node.js build environment. After pulling, run `npm install` to get dependencies. If the newest (highest number) `dist` folder is the same as on the webstore, run `npm version patch` then `gulp build` before you start. Install the newest `dist` folder into Chrome and disable the webstore copy. If you change the manifest, run `gulp manifest`. Autobuild js files while you work with `gulp watch`. For now you will have to manually reload Clerc after changes, but I'm thinking about making it reload itself also.
-
-* *Tests*
-
-    A good test suite would be very helpful moving forward.
-
-* *Known Issues*
-
-    Please consider handling one of the issues listed above before implementing your own ideas.
-
-* *Your own ideas*
-
-    Try anything you want and send a pull request for consideration.
-
-* *Options page*
-
-    If you want to add a feature that should be optional, then please make a basic options page first.
+  I have experienced some issues with submodules of a `browserify` bundle not getting reloaded. I don't use `browserify` anymore, so it's hard for me to test this. If you can put together a minimum case project to replicate this behavior I'd be happy to take a look at it.
