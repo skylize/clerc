@@ -3,12 +3,15 @@
   "version": "0.1.4",
   "description": "Live Reload client for Chrome App development.",
   "scripts": {
-    "test": "ava -v -c 4 --color src/**/*.test.js",
-    "watch-test": "ava -wv -c 4 --color ./src/**/*.test.js",
     "build": "NODE_ENV=production webpack --colors",
     "debug-test": "node --inspect node_modules/ava/profile.js",
+    "postversion": "git push && git push --tags",
+    "preversion": "npm test",
+    "test": "ava -v --color src/**/*.test.js",
     "watch": "webpack --watch --progress --colors",
-    "watch-fake": "sh -c 'cd fake-plugin && npm run watch'"
+    "watch-fake": "sh -c 'cd fake-plugin && npm run watch'",
+    "watch-test": "ava -wv -c 4 --color ./src/**/*.test.js",
+    "version": "npm run build && node publish && git add -A dist/*"
   },
   "ava": {
     "require": "babel-register",
@@ -90,9 +93,9 @@
     "file-loader": "^0.11.2",
     "image-webpack-loader": "^3.4.2",
     "mock-socket": "^7.0.0",
-    "sinon": "^3.2.1",
     "str-replace-loader": "^1.0.1",
-    "webpack": "^3.5.6"
+    "webpack": "^3.5.6",
+    "zip-folder": "^1.0.0"
   },
   "dependencies": {
     "empty-promise": "^1.2.0"
