@@ -1,6 +1,5 @@
 
 const path = require('path')
-const CopyPlugin = require('copy-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
 
 const plugins = ( () => {

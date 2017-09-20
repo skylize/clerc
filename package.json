@@ -86,7 +86,6 @@
   "devDependencies": {
     "ava": "^0.22.0",
     "clean-webpack-plugin": "^0.1.16",
-    "copy-webpack-plugin": "^4.0.1",
     "eslint": "^4.6.1",
     "file-loader": "^0.11.2",
     "image-webpack-loader": "^3.4.2",
