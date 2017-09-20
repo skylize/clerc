@@ -1,5 +1,4 @@
 import test from 'ava'
-import sinon from 'sinon'
 import promise from 'empty-promise'
 import makeReload from './reload'
 
