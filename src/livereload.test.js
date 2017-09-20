@@ -1,6 +1,6 @@
 import test from 'ava'
 import promise from 'empty-promise'
-import makeLrSocket from './livereload.js'
+import makeLrSocket from './livereload'
 
 
 /**

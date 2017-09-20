@@ -1,6 +1,6 @@
 /* global chrome */
-import liveReloadSocket from './livereload.js'
-import makeBadge from './badge.js'
+import liveReloadSocket from './livereload'
+import makeBadge from './badge'
 import makeReload from './reload'
 
 const badge = makeBadge({chrome})

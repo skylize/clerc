@@ -23,9 +23,9 @@ const version = require('./package.json').version
 module.exports = {
   context: path.join(__dirname, 'src'),
   entry: {
-    'background': './background.js',
+    'background': './background',
     'manifest': './manifest.json',
-    'img': './img/index.js',
+    'img': './img/index',
   },
   plugins,
   devtool: (process.env.NODE_ENV !== 'production') && 'source-map',
