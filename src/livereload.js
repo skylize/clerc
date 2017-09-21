@@ -94,8 +94,8 @@ function makeLivereloadSocket ({
     catch(e) { return void onError(e) }
 
     socket.onmessage = hello
-    socket.onerror = onError
-    socket.onclose = onSocketClose
+    socket.onerror = onError // consumer provided callback
+    socket.onclose = onClose // consumer provided callback
     socket.onopen = async ()=> {
       const fullyOpened = await yesItsReallyOpen()
       if(fullyOpened) socket.send(handshake)
@@ -182,18 +182,6 @@ function makeLivereloadSocket ({
     }
     // Finally reached state consumer would view as open
     onOpen() // consumer provided callback
-  }
-
-  // Let consumer know we're closed for business.
-  // Some light cleanup might help garbage collection.
-  //
-  function onSocketClose() {
-    // some light cleanup
-    ['onclose', 'onopen', 'onerror', 'onmessage']
-      .forEach(listener=>socket[listener] = void 0)
-    socket = void 0
-
-    onClose() // consumer provided callback
   }
 
   return { connect, disconnect }
