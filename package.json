@@ -1,6 +1,6 @@
 {
   "name": "clerc",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Live Reload client for Chrome App development.",
   "scripts": {
     "build": "NODE_ENV=production webpack --colors",
